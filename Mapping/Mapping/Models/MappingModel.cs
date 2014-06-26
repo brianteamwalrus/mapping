@@ -12,10 +12,11 @@ namespace Mapping.Models
     {
         private string address;
 
-
+        [Required]
         [Display(Name = "Place Name")]
         public string PlaceName { get; set; }
 
+        [Required]
         [Display(Name = "Address")]
         public string Address 
         {
@@ -27,7 +28,12 @@ namespace Mapping.Models
             {
                 address = value;
                 var locationService = new GoogleLocationService();
-                LatLng = locationService.GetLatLongFromAddress(address);
+                try
+                {
+                    LatLng = locationService.GetLatLongFromAddress(address);
+                }
+                catch (Exception ex)
+                {}
             }
         }
 
@@ -52,19 +58,20 @@ namespace Mapping.Models
 
         public MappingModel()
         {
+            // MapId = 1;
             mapLocations = new List<MapLocation>();
         }
 
-        public List<MapLocation> GetMarkers(int mapId)
+        public List<MapLocation> GetMarkers()
         {
-            mapLocations = MappingData.GetMarkers(mapId);
+            mapLocations = MappingData.GetMarkers(MapId);
             return mapLocations;
         }
 
         public void AddMarker(MapLocation marker)
         {
             MappingData.AddMarker(MapId, marker);
-            GetMarkers(MapId);
+            GetMarkers();
         }
 
 

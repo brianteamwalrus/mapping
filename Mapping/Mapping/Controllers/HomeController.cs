@@ -14,7 +14,7 @@ namespace Mapping.Controllers
         public ActionResult Index()
         {
             MappingModel model = new MappingModel();
-            model.GetMarkers(1);
+            model.GetMarkers();
 
             return View(model);
         }
@@ -23,10 +23,21 @@ namespace Mapping.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(MappingModel model)
         {
-            model.AddMarker(model.mapLocation);
+
+            if (model.mapLocation!= null && model.mapLocation.LatLng != null)
+            {
+                model.AddMarker(model.mapLocation);
+                model.mapLocation = new MapLocation();
+                model.mapLocation.PlaceName = "";
+            }
+            else
+            {
+                if (model.mapLocation!= null) ModelState.AddModelError("mapLocation.Address", "Address not found");
+                model.GetMarkers();
+            }
+
             return View(model);
         }
-
 
         public ActionResult About()
         {

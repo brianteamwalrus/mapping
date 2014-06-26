@@ -109,3 +109,4 @@ C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\bin\Microso
 C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.csprojResolveAssemblyReference.cache
 C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.dll
 C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.pdb
+K:\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.csprojResolveAssemblyReference.cache
