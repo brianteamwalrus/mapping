@@ -41,10 +41,8 @@ namespace Mapping.Models
         public MapPoint LatLng {get;set;}
     }
 
-
-    public class MappingModel
+    public class MapLocationModel
     {
-        public int MapId { get; set; }
         public MapLocation mapLocation { get; set; }
         private List<MapLocation> mapLocations { get; set; }
         public string mapLocationsJson
@@ -56,21 +54,20 @@ namespace Mapping.Models
             }
         }
 
-        public MappingModel()
+        public MapLocationModel()
         {
-            // MapId = 1;
             mapLocations = new List<MapLocation>();
         }
 
         public List<MapLocation> GetMarkers()
         {
-            mapLocations = MappingData.GetMarkers(MapId);
+            mapLocations = MappingData.GetMarkers(1);
             return mapLocations;
         }
 
         public void AddMarker(MapLocation marker)
         {
-            MappingData.AddMarker(MapId, marker);
+            MappingData.AddMarker(1, marker);
             GetMarkers();
         }
 

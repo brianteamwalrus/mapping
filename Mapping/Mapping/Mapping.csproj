@@ -168,8 +168,9 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\MapDetailModel.cs" />
     <Compile Include="Models\MappingData.cs" />
-    <Compile Include="Models\MappingModel.cs" />
+    <Compile Include="Models\MapLocationModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -225,8 +226,9 @@
     <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Shared\_PlaceForm.cshtml" />
+    <Content Include="Views\Shared\_LocationForm.cshtml" />
     <Content Include="Views\Shared\_MapForm.cshtml" />
+    <Content Include="Views\Home\Map.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

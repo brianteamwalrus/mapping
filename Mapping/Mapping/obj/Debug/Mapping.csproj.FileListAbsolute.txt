@@ -53,6 +53,7 @@ K:\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\bin\Microsoft.Owin.Secu
 K:\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.dll
 K:\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.pdb
 K:\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\bin\GoogleMaps.LocationServices.dll
+K:\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.csprojResolveAssemblyReference.cache
 C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\bin\Mapping.dll.config
 C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\bin\Mapping.dll
 C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\bin\Mapping.pdb
@@ -106,7 +107,6 @@ C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\bin\Microso
 C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\bin\Microsoft.Owin.Security.Google.xml
 C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\bin\Microsoft.Owin.Security.Twitter.xml
 C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
-C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.csprojResolveAssemblyReference.cache
 C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.dll
 C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.pdb
-K:\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.csprojResolveAssemblyReference.cache
+C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.csprojResolveAssemblyReference.cache

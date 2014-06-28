@@ -1,0 +1,96 @@
+﻿@model Mapping.Models.MapLocationModel
+
+
+
+
+        <script type="text/javascript">
+            function AddMarker()
+            {
+                var placeName = document.getElementById("mapLocation_PlaceName").value;
+                var address = document.getElementById("mapLocation_Address").value;
+                $.ajax({
+                    type: "POST",
+                    url: '/Home/AddMarker',
+                    dataType: "html",
+                    data: {
+                        'PlaceName': placeName,
+                        'Address': address
+                    },
+                    success: function (result) {
+                        if (result == "True") {
+                            AddMarkerSuccess();
+                        } else {
+                            AddMarkerError();
+                        }
+                    },
+                    error: function (request, status, error) {
+                        AddMarkerError();
+                    }
+                });
+            }
+
+            function AddMarkerSuccess()
+            {
+                var placeName = document.getElementById("mapLocation_PlaceName");
+                var address = document.getElementById("mapLocation_Address");
+
+                var marker = new gm.Marker({
+                    'position': new gm.LatLng(-24.303423, 134.130571),
+                    'map': map,
+                    'title': placeName.value,
+                    'icon': 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+                });
+
+                var infowindow = new gm.InfoWindow({
+                    content: "<div class='infoDiv'><h2>" + placeName.value + "</h2><a href='http://www.google.com'>fish</a></div>"
+                });
+
+                google.maps.event.addListener(marker, 'click', function () {
+                    infowindow.open(map, marker);
+                });
+
+                oms.addListener('spiderfy', function (markers) {
+                    infowindow.close();
+                })
+                oms.addMarker(marker);
+
+                document.getElementById("addMarkerStatus").innerHTML = "<p class=\"text-success\"><strong>Saved " + placeName.value + " to map!</strong></p>";
+                placeName.value = "";
+                address.value = "";
+            }
+
+            function AddMarkerError()
+            {
+                document.getElementById("addMarkerStatus").innerHTML = "<p class=\"text-danger\"><strong>Failure!</strong></p>";
+            }
+
+        </script>
+
+
+
+<div>
+    @using (Html.BeginForm("Map", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", autocomplete = "off" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+                        @Html.LabelFor(m => m.mapLocation.PlaceName, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.mapLocation.PlaceName, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.mapLocation.PlaceName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+        <div class="form-group">
+                        @Html.LabelFor(m => m.mapLocation.Address, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.mapLocation.Address, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.mapLocation.Address, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div onclick="javascript:AddMarker()" class="btn btn-default pull-left">Save to Map</div> <div id="addMarkerStatus"></div>
+            </div>
+        </div>
+    }
+</div>

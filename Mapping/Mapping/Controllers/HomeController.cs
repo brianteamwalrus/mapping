@@ -13,7 +13,22 @@ namespace Mapping.Controllers
     {
         public ActionResult Index()
         {
-            MappingModel model = new MappingModel();
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(MapDetailModel model)
+        {
+            if (model.MapId == 0) return RedirectToAction("Index", "Home");
+
+            Session.Add("MapId",model.MapId);
+            return RedirectToAction("Map", "Home"); 
+        }
+
+        public ActionResult Map()
+        {
+            MapLocationModel model = new MapLocationModel();
             model.GetMarkers();
 
             return View(model);
@@ -21,23 +36,32 @@ namespace Mapping.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(MappingModel model)
+        public ActionResult Map(MapLocationModel model)
         {
 
             if (model.mapLocation!= null && model.mapLocation.LatLng != null)
             {
                 model.AddMarker(model.mapLocation);
-                model.mapLocation = new MapLocation();
-                model.mapLocation.PlaceName = "";
             }
             else
             {
-                if (model.mapLocation!= null) ModelState.AddModelError("mapLocation.Address", "Address not found");
+                ModelState.AddModelError("mapLocation.Address", "Address not found");
                 model.GetMarkers();
             }
 
             return View(model);
         }
+
+        [HttpPost]
+        public bool AddMarker(string PlaceName, string Address)
+        {
+            bool result = false;
+            if (PlaceName == "home") result = true;
+
+            return result;
+        }
+
+
 
         public ActionResult About()
         {
