@@ -53,15 +53,20 @@ namespace Mapping.Controllers
         }
 
         [HttpPost]
-        public bool AddMarker(string PlaceName, string Address)
+        public string AddMarker(string PlaceName, string Address)
         {
-            bool result = false;
-            if (PlaceName == "home") result = true;
+            string result = string.Empty;
 
+            MapLocation location = new MapLocation();
+            location.PlaceName = PlaceName+"zzz";
+            location.Address = Address;
+            if (location.LatLng != null)
+            {
+                System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                result = jss.Serialize(location);
+            }
             return result;
         }
-
-
 
         public ActionResult About()
         {

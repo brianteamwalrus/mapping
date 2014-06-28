@@ -226,8 +226,6 @@
     <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Shared\_LocationForm.cshtml" />
-    <Content Include="Views\Shared\_MapForm.cshtml" />
     <Content Include="Views\Home\Map.cshtml" />
   </ItemGroup>
   <ItemGroup />
