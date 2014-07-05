@@ -6,67 +6,41 @@ using System.Web.Mvc;
 using Mapping.Models;
 using GoogleMaps.LocationServices;
 using System.Data.SqlClient;
+using System.Web.Security;
+using System.Web.Routing;
+using System.Web.UI;
 
 namespace Mapping.Controllers
 {
     public class HomeController : Controller
     {
+        
         public ActionResult Index()
         {
+            //string guid2 = System.Guid.NewGuid().ToString("N");
+            FormsAuthentication.SignOut();
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(MapDetailModel model)
+        public ActionResult Index(MapModel model)
         {
-            if (model.MapId == 0) return RedirectToAction("Index", "Home");
-
-            Session.Add("MapId",model.MapId);
-            return RedirectToAction("Map", "Home"); 
-        }
-
-        public ActionResult Map()
-        {
-            MapLocationModel model = new MapLocationModel();
-            model.GetMarkers();
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Map(MapLocationModel model)
-        {
-
-            if (model.mapLocation!= null && model.mapLocation.LatLng != null)
+            model = MappingData.GetMap(model.mapDetail.MapId, model.mapDetail.MapCode);
+            if (model != null)
             {
-                model.AddMarker(model.mapLocation);
+                FormsAuthentication.SetAuthCookie(model.mapDetail.MapIdentifier,false);
             }
             else
             {
-                ModelState.AddModelError("mapLocation.Address", "Address not found");
-                model.GetMarkers();
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
             }
 
-            return View(model);
+            return RedirectToAction("Index", "Map"); 
         }
 
-        [HttpPost]
-        public string AddMarker(string PlaceName, string Address)
-        {
-            string result = string.Empty;
 
-            MapLocation location = new MapLocation();
-            location.PlaceName = PlaceName+"zzz";
-            location.Address = Address;
-            if (location.LatLng != null)
-            {
-                System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
-                result = jss.Serialize(location);
-            }
-            return result;
-        }
 
         public ActionResult About()
         {

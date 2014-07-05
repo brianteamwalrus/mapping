@@ -16,6 +16,21 @@ namespace Mapping
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            RegisterRoutes(RouteTable.Routes);
+            
+        }
+
+        void RegisterRoutes(RouteCollection routes)
+        {
+            //routes.MapRoute(
+            //    "ViewMap",
+            //    "Map/View/{searchterm}",
+            //    new
+            //    {
+            //        controller = "Map",
+            //        action = "ViewMap",
+            //        searchterm = UrlParameter.Optional
+            //    });
         }
     }
 }
