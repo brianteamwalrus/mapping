@@ -17,7 +17,6 @@ namespace Mapping.Controllers
         
         public ActionResult Index()
         {
-            //string guid2 = System.Guid.NewGuid().ToString("N");
             FormsAuthentication.SignOut();
             return View();
         }
@@ -40,6 +39,13 @@ namespace Mapping.Controllers
             return RedirectToAction("Index", "Map"); 
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LogOff()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Index", "Home");
+        }
 
 
         public ActionResult About()
@@ -53,5 +59,6 @@ namespace Mapping.Controllers
             ViewBag.Message = "Your contact page.";
             return View();
         }
+
     }
 }

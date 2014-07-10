@@ -157,6 +157,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddMarkerClass.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -230,6 +231,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Map\Index.cshtml" />
     <Content Include="Views\Map\Create.cshtml" />
+    <Content Include="Views\Map\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

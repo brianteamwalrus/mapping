@@ -8,7 +8,6 @@ namespace Mapping
 {
     public class MapDetail
     {
-        [Required]
         [Display(Name = "Map Identifier")]
         public string MapIdentifier { get; set; }
 

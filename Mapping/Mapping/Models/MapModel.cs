@@ -10,6 +10,8 @@ namespace Mapping.Models
         public MapDetail mapDetail { get; set; }
         public MapLocation mapLocation { get; set; }
         public List<MapLocation> mapLocations { get; set; }
+        public bool updateStatus { get; set; }
+
         public string mapLocationsJson
         {
             get
