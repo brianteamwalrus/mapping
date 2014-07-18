@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="twmapping" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\Brian\\Dropbox\\Misc\\VisualStudio2010\\Mapping\\Mapping\\Mapping\\obj\\Release\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^C:\\Users\\Brian\\Dropbox\\Misc\\VisualStudio2010\\Mapping\\Mapping\\Mapping\\obj\\Release\\Package\\PackageTmp$" />
+  </parameter>
+  <parameter name="Add write permission to App_Data Folder" description="Add write permission to App_Data folder" value="twmapping/App_Data" tags="Hidden">
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^C:\\Users\\Brian\\Dropbox\\Misc\\VisualStudio2010\\Mapping\\Mapping\\Mapping\\obj\\Release\\Package\\PackageTmp\\App_Data$" />
+  </parameter>
+  <parameter name="DefaultConnection-Web.config Connection String" description="DefaultConnection Connection String used in web.config by the application to access the database." value="Data Source=(LocalDb)\v11.0;AttachDbFilename=|DataDirectory|\aspnet-Mapping-20140620031814.mdf;Initial Catalog=aspnet-Mapping-20140620031814;Integrated Security=True" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Brian\\Dropbox\\Misc\\VisualStudio2010\\Mapping\\Mapping\\Mapping\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+  <parameter name="MappingDatabase-Web.config Connection String" description="MappingDatabase Connection String used in web.config by the application to access the database." value="Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\MappingDatabase.mdf;Integrated Security=True;Connect Timeout=30" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Brian\\Dropbox\\Misc\\VisualStudio2010\\Mapping\\Mapping\\Mapping\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='MappingDatabase']/@connectionString" />
+  </parameter>
+</parameters>

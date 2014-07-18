@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "About";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+<p>Use this area to provide additional information.</p>
+
+@section scripts {
+    <section class="scripts">
+        <script type="text/javascript">
+
+            $(document).ready(function () {
+                $("#popovertest").popover();
+            });
+
+            $('.popover-dismiss').popover({
+                trigger: 'focus'
+            })
+        </script>
+        </section>
+    }
+
+
+<input type="text" id="popovertest" class="popover-dismiss" data-toggle="popover" title="Dismissible popover" data-content="And here's some amazing content." />
+

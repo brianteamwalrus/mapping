@@ -25,7 +25,7 @@ namespace Mapping.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(MapModel model)
         {
-            model = MappingData.GetMap(model.mapDetail.MapId, model.mapDetail.MapCode);
+            model.mapDetail = MappingData.GetMap(model.mapDetail.MapId, model.mapDetail.MapCode);
             if (model != null)
             {
                 FormsAuthentication.SetAuthCookie(model.mapDetail.MapIdentifier,false);
@@ -40,7 +40,6 @@ namespace Mapping.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
             FormsAuthentication.SignOut();

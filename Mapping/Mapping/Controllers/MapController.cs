@@ -1,5 +1,6 @@
 ﻿using Mapping.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,7 +14,8 @@ namespace Mapping.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            MapModel model = MappingData.GetMap(User.Identity.Name);
+            MapModel model = new MapModel();
+            model.mapDetail = MappingData.GetMap(User.Identity.Name);
             model.mapLocations = MappingData.GetMarkers(User.Identity.Name);
 
             return View(model);
@@ -28,7 +30,8 @@ namespace Mapping.Controllers
 
             if (mapId > 0)
             {
-                model = MappingData.GetMap(mapId);
+                model = new MapModel();
+                model.mapDetail = MappingData.GetMap(mapId);
             }
             if (model != null && model.mapDetail != null)
             {
@@ -96,6 +99,23 @@ namespace Mapping.Controllers
             return jss.Serialize(result);
         }
 
+        // Called from AJAX javascript
+        [Authorize]
+        [HttpPost]
+        public string DeleteMarker(string MarkerId)
+        {
+            bool result = false;
+            int markerId = 0;
+            int.TryParse(MarkerId, out markerId);
+            if (markerId!=0)
+            {
+                result = MappingData.DeleteMarker(User.Identity.Name, markerId);
+            }
+            
+            System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+            return jss.Serialize(result);
+        }
+
         public ActionResult Create()
         {
             MapModel model = new MapModel();
@@ -137,7 +157,8 @@ namespace Mapping.Controllers
         [Authorize]
         public ActionResult Edit()
         {
-            MapModel model = MappingData.GetMap(User.Identity.Name);
+            MapModel model = new MapModel();
+            model.mapDetail = MappingData.GetMap(User.Identity.Name);
             return View(model);
         }
 
@@ -160,6 +181,14 @@ namespace Mapping.Controllers
             return View(model);
         }
 
+        [Authorize]
+        public ActionResult Grid(int page = 1, int sortBy = 2, bool isAsc = true)
+        {
+            MapModel model = new MapModel();
+            model.mapDetail = MappingData.GetMap(User.Identity.Name);
+            model.mapGrid = MappingData.GetMarkersForGrid(model.mapDetail.MapId, page, sortBy, isAsc);
+            return View(model);
+        }
 
     }
 }

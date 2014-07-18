@@ -109,4 +109,8 @@ C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\bin\Microso
 C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.dll
 C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.pdb
 C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.csprojResolveAssemblyReference.cache
+C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\bin\App_Data\MappingDatabase.mdf
+C:\Users\Brian\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\bin\App_Data\MappingDatabase_log.ldf
+K:\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\bin\App_Data\MappingDatabase.mdf
+K:\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\bin\App_Data\MappingDatabase_log.ldf
 K:\Dropbox\Misc\VisualStudio2010\Mapping\Mapping\Mapping\obj\Debug\Mapping.csprojResolveAssemblyReference.cache

@@ -58,7 +58,7 @@
         }
     </div>
     
-    <!-- Modal -->
+    <!-- Modal clearMap -->
     <div class="modal fade" id="clearMapModal" tabindex="-1" role="dialog" aria-labelledby="clearMapModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         @using (Html.BeginForm("Clear", "Map", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
@@ -83,6 +83,28 @@
         }
       </div>
     </div>    
+    
+    <!-- Modal deleteMarker -->
+    <div class="modal fade" id="deleteMarkerModal" tabindex="-1" role="dialog" aria-labelledby="deleteMarkerModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="deleteMarkerModalLabel">Delete Marker</h4>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure you want to delete the marker for:<div id="deletePlaceName"></div></p>
+                <br />
+                <p class="text-danger"><strong>This action can not be undone!</strong></p>
+              </div>
+              <div class="modal-footer">
+                <div id="deleteMarkerStatus"></div>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" id="deleteMarkerBtn" class="btn btn-danger">Delete Marker</button>
+              </div>
+            </div>
+      </div>
+    </div>    
 }
 else
 {
@@ -93,13 +115,6 @@ else
 
 <div id="map_canvas" style="height: 600px;"></div>
 
-@*marker.setValues({type: "point", id: 1});
-// or
-marker.set("type", "point");
-marker.set("id", 1);
-var val = marker.get("id");*@
-
-
 @section scripts {
     <section class="scripts">
         <script type="text/javascript">
@@ -107,6 +122,7 @@ var val = marker.get("id");*@
             var gm = google.maps;
             var map = null;
             var oms = null;
+            var allMarkers = [];
 
             $(document).ready(function () {
                 Initialize();
@@ -133,6 +149,12 @@ var val = marker.get("id");*@
                     if (event.which == 13) {
                         $("#btnSaveMarker").click();
                     } 
+                });
+
+                $("#mapLocation_PlaceName").keypress(function (event) {
+                    if (event.which == 13) {
+                        $("#btnSaveMarker").click();
+                    }
                 });
 
             });
@@ -199,6 +221,7 @@ var val = marker.get("id");*@
                             }
                         }
                     });
+                    document.getElementById("mapLocation_PlaceName").focus();
                 });
             }
 
@@ -281,9 +304,10 @@ var val = marker.get("id");*@
                     'animation':gm.Animation.DROP,
                     'icon': 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
                 });
+                marker.set("id", markerId);
 
                 var infowindow = new gm.InfoWindow({
-                    content: "<div class='infoDiv'><h2>" + placeName + "</h2><a href='http://www.google.com'>"+markerId+"</a></div>"
+                    content: "<div ><h2>" + placeName + "</h2><p>"+address+"</p><p>Latitude:"+ latitude +"</p><p>Longitude:"+ longitude +"</p></div>"
                 });
 
                 google.maps.event.addListener(marker, 'click', function () {
@@ -291,9 +315,14 @@ var val = marker.get("id");*@
                 });
 
                 google.maps.event.addListener(marker, "rightclick", function () {
-                    if (confirm("Deselect " + marker.title + " and remove from Map?")) {
-                        marker.setMap(null);
-                    }
+                    // Reset modal colours, messages etc
+                    document.getElementById("deleteMarkerStatus").innerHTML = "";
+                    document.getElementById("deleteMarkerBtn").className = "btn btn-danger";
+                    document.getElementById("deleteMarkerBtn").innerHTML = "Delete";
+
+                    document.getElementById("deletePlaceName").innerHTML = "<h2>" + marker.getTitle()+ "</h2>";
+                    document.getElementById("deleteMarkerBtn").onclick = function () { DeleteMarker(markerId); }
+                    $("#deleteMarkerModal").modal('show');
                 });
 
                 oms.addListener('spiderfy', function (markers) {
@@ -301,6 +330,47 @@ var val = marker.get("id");*@
                 })
 
                 oms.addMarker(marker);
+
+                allMarkers.push(marker);
+            }
+
+            function DeleteMarker(markerId)
+            {
+                $.ajax({
+                    type: "POST",
+                    url: '/Map/DeleteMarker',
+                    dataType: "json",  //html
+                    data: {
+                        'MarkerId': markerId
+                    },
+                    success: function (result) {
+                        if (result == true) {
+                            RemoveMarkerFromMap(markerId);
+                            document.getElementById("deleteMarkerStatus").innerHTML = "<p class='text-success'>Marker has been removed</p>";
+                        } else {
+                            document.getElementById("deleteMarkerStatus").innerHTML = "<p class='text-danger'>Unable to remove marker</p>";
+                        }
+                    },
+                    error: function (request, status, error) {
+                        document.getElementById("deleteMarkerStatus").innerHTML = "<p class='text-danger'>Error in attempting to delete marker</p>";
+                    }
+                });
+
+                document.getElementById("deleteMarkerBtn").className = "btn btn-primary";
+                document.getElementById("deleteMarkerBtn").innerHTML = "Done";
+                document.getElementById("deleteMarkerBtn").onclick = function() { $("#deleteMarkerModal").modal('hide'); }
+                
+            }
+
+            function RemoveMarkerFromMap(markerId)
+            {
+                for (var i = 0; i < allMarkers.length; i++) {
+                    var marker = allMarkers[i];
+                    var id = marker.get("id");
+                    if (id == markerId) {
+                        marker.setMap(null);
+                    }
+                }
             }
 
         </script>

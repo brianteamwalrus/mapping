@@ -1,0 +1,59 @@
+﻿@model Mapping.Models.MapModel
+
+@{
+    ViewBag.Title = "Grid";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Marker Locations</h2>
+
+@helper sortLink(string name, int id)
+{
+    <a href="@Url.Action("Grid", "Map", new { page = 1, sortby = id, isasc = (id == Model.mapGrid.sortBy ? (!Model.mapGrid.isAsc).ToString() : "true")})">@name</a>
+    if (id == Model.mapGrid.sortBy)
+    {
+        <span class="arrow @(Model.mapGrid.isAsc ? "glyphicon glyphicon-chevron-up" : "glyphicon glyphicon-chevron-down")"></span>
+    }
+}
+
+
+<table class="table table-striped">
+    <tr>
+        <th></th>
+        <th>@sortLink("Place Name",2)</th>
+        <th>@sortLink("Address",3)</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+    </tr>
+
+    @{  var i = 0;
+        foreach (var record in Model.mapGrid.MarkerList)
+        {
+            i++;
+        <tr>
+            <td>@(i.ToString())</td>
+            <td>@(record.PlaceName)</td>
+            <td>@(record.Address)</td>
+            <td>@(record.LatLng.Latitude)</td>
+            <td>@(record.LatLng.Longitude)</td>
+        </tr>
+        }
+    }
+</table>
+
+<ul class="pagination">
+    @for (var page = 1; page <= Model.mapGrid.TotalPages; page++)
+    { 
+        if (Model.mapGrid.CurrentPage == page)
+        {
+            <li class="active"><a href="#">@(page)</a></li>
+        }
+        else
+        {
+            <li>
+                <a href="@Url.Action("Grid", "Map", new { page = @page, sortby = Model.mapGrid.sortBy, isasc = Model.mapGrid.isAsc })">@(page)</a>
+            </li>    
+        }
+        
+    }
+</ul>

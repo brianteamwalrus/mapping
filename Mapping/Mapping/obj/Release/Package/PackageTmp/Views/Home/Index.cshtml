@@ -1,0 +1,63 @@
+﻿@model Mapping.Models.MapModel
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<p></p>
+
+<div>
+    <div style="float:left;width:50%">
+        @using (Html.BeginForm("Index", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", autocomplete = "off" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.mapDetail.MapId, new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.mapDetail.MapId, new { @class = "form-control", placeholder = "Enter Map ID", Value = "" })
+                    @Html.ValidationMessageFor(m => m.mapDetail.MapId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.mapDetail.MapCode, new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.mapDetail.MapCode, new { @class = "form-control", placeholder = "Optional Map Code", Value = "" })
+                    @Html.ValidationMessageFor(m => m.mapDetail.MapCode, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">Load Map</button>
+                </div>
+            </div>
+        }
+
+    </div>
+    <div>
+        <div id="btnTerms" class="btn btn-success btn-lg" data-toggle="modal" data-target="#termsModal">Create New Map</div>
+    </div>
+</div>
+<div style="clear:both"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" role="dialog" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="termsModalLabel">Terms & Conditions</h4>
+            </div>
+            <div class="modal-body">
+                <p>You agree to.....</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No thank you</button>
+                @Html.ActionLink("I agree", "Create", "Map", null, new { @class = "btn btn-success btn-lg", role = "button" })
+            </div>
+        </div>
+    </div>
+</div>  

@@ -1,5 +1,6 @@
 ﻿using Mapping.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -9,9 +10,9 @@ namespace Mapping
 {
     public static class MappingData
     {
-        public static MapModel GetMap(string mapIdentifier)
+        public static MapDetail GetMap(string mapIdentifier)
         {
-            MapModel map = null;
+            MapDetail map = null;
             using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MappingDatabase"].ConnectionString))
             {
                 using (SqlCommand Cmd = new SqlCommand("select * from Maps where MapIdentifier=@dMapIdentifier", conn))
@@ -25,9 +26,9 @@ namespace Mapping
             return map;
         }
 
-        public static MapModel GetMap(int mapId, string mapCode)
+        public static MapDetail GetMap(int mapId, string mapCode)
         {
-            MapModel map = null;
+            MapDetail map = null;
             if (mapCode == null) mapCode = string.Empty;
             using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MappingDatabase"].ConnectionString))
             {
@@ -43,9 +44,9 @@ namespace Mapping
             return map;
         }
 
-        public static MapModel GetMap(int mapId)
+        public static MapDetail GetMap(int mapId)
         {
-            MapModel map = null;
+            MapDetail map = null;
             using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MappingDatabase"].ConnectionString))
             {
                 using (SqlCommand Cmd = new SqlCommand("select * from Maps where MapId=@dMapId and MapViewAllowed=1", conn))
@@ -59,19 +60,19 @@ namespace Mapping
             return map;
         }
 
-        public static MapModel GetMap(SqlCommand Cmd)
+        public static MapDetail GetMap(SqlCommand Cmd)
         {
-            MapModel map = null;
+            MapDetail map = null;
             using (SqlDataReader Reader = Cmd.ExecuteReader())
             {
                 while (Reader.Read())
                 {
-                    map = new MapModel();
-                    map.mapDetail.MapIdentifier = Reader["MapIdentifier"].ToString();
-                    map.mapDetail.MapId = int.Parse(Reader["MapId"].ToString());
-                    map.mapDetail.MapName = Reader["MapName"].ToString();
-                    map.mapDetail.MapCode = Reader["MapCode"].ToString();
-                    map.mapDetail.MapViewAllowed = (bool)Reader["MapViewAllowed"];
+                    map = new MapDetail();
+                    map.MapIdentifier = Reader["MapIdentifier"].ToString();
+                    map.MapId = int.Parse(Reader["MapId"].ToString());
+                    map.MapName = Reader["MapName"].ToString();
+                    map.MapCode = Reader["MapCode"].ToString();
+                    map.MapViewAllowed = (bool)Reader["MapViewAllowed"];
                 }
             }
             return map;
@@ -111,13 +112,13 @@ namespace Mapping
         public static int AddMarker(string mapIdentifier, MapLocation marker)
         {
             int markerId = 0;
-            MapModel map = GetMap(mapIdentifier);
+            MapDetail map = GetMap(mapIdentifier);
 
             using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MappingDatabase"].ConnectionString))
             {
                 using (SqlCommand Cmd = new SqlCommand("INSERT INTO MapMarkers (MapId,PlaceName,Address,Latitude,Longitude) VALUES (@dMapId,@dPlaceName,@dAddress,@dLatitude,@dLongitude);SELECT SCOPE_IDENTITY();", conn))
                 {
-                    Cmd.Parameters.Add("@dMapId", System.Data.SqlDbType.Int).Value = map.mapDetail.MapId;
+                    Cmd.Parameters.Add("@dMapId", System.Data.SqlDbType.Int).Value = map.MapId;
                     Cmd.Parameters.Add("@dPlaceName", System.Data.SqlDbType.NVarChar).Value = marker.PlaceName;
                     Cmd.Parameters.Add("@dAddress", System.Data.SqlDbType.NVarChar).Value = marker.Address;
                     Cmd.Parameters.Add("@dLatitude", System.Data.SqlDbType.Float).Value = marker.LatLng.Latitude;
@@ -132,19 +133,38 @@ namespace Mapping
 
         public static void DeleteAllMarkers(string mapIdentifier)
         {
-            MapModel map = GetMap(mapIdentifier);
+            MapDetail map = GetMap(mapIdentifier);
 
             using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MappingDatabase"].ConnectionString))
             {
                 using (SqlCommand Cmd = new SqlCommand("DELETE FROM MapMarkers WHERE MapId=@dMapId;", conn))
                 {
-                    Cmd.Parameters.Add("@dMapId", System.Data.SqlDbType.Int).Value = map.mapDetail.MapId;
+                    Cmd.Parameters.Add("@dMapId", System.Data.SqlDbType.Int).Value = map.MapId;
                     conn.Open();
                     Cmd.ExecuteNonQuery();
                     conn.Close();
                 }
             }
         }
+
+        public static bool DeleteMarker(string mapIdentifer, int markerId)
+        {
+            MapDetail map = GetMap(mapIdentifer);
+
+            using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MappingDatabase"].ConnectionString))
+            {
+                using (SqlCommand Cmd = new SqlCommand("DELETE FROM MapMarkers WHERE MapId=@dMapId AND MarkerId=@dMarkerId;", conn))
+                {
+                    Cmd.Parameters.Add("@dMapId", System.Data.SqlDbType.Int).Value = map.MapId;
+                    Cmd.Parameters.Add("@dMarkerId", System.Data.SqlDbType.Int).Value = markerId;
+                    conn.Open();
+                    Cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+            }
+            return true;
+        }
+
 
         public static int CreateMap(MapDetail map)
         {
@@ -184,6 +204,98 @@ namespace Mapping
                 }
             }
             return true;
+        }
+
+
+        public static MapGrid GetMarkersForGrid(int mapId, int page = 1, int sortBy = 1, bool isAsc = true)
+        {
+            int pageSize = 20;
+            MapGrid obj = new MapGrid();
+            string sortColumn = string.Empty;
+
+            #region SortingColumn
+            switch (sortBy)
+            {
+                case 1:
+                    if (isAsc)
+                        sortColumn = "MarkerId";
+                    else
+                        sortColumn = "MarkerId Desc";
+                    break;
+
+                case 2:
+                    if (isAsc)
+                        sortColumn = "PlaceName";
+                    else
+                        sortColumn = "PlaceName Desc";
+                    break;
+
+                case 3:
+                    if (isAsc)
+                        sortColumn = "Address";
+                    else
+                        sortColumn = "Address Desc";
+                    break;
+            }
+            #endregion
+
+
+            using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MappingDatabase"].ConnectionString))
+            {
+                string sqlQuery = "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY "+sortColumn+") AS NUM, * FROM MapMarkers WHERE MapId=@dMapId) A WHERE NUM > @dLowRecord AND NUM < @dHighRecord;";
+                using (SqlCommand Cmd = new SqlCommand(sqlQuery, conn))
+                {
+                    Cmd.Parameters.Add("@dMapId", System.Data.SqlDbType.Int).Value = mapId;
+                    Cmd.Parameters.Add("@dLowRecord",System.Data.SqlDbType.Int).Value = ((page - 1) * pageSize);
+                    Cmd.Parameters.Add("@dHighRecord", System.Data.SqlDbType.Int).Value = ((page * pageSize)+1);
+
+
+                    conn.Open();
+                    MapLocation marker;
+                    using (SqlDataReader Reader = Cmd.ExecuteReader())
+                    {
+                        while (Reader.Read())
+                        {
+                            marker = new MapLocation();
+                            marker.PlaceName = Reader["PlaceName"].ToString();
+                            marker.Address = Reader["Address"].ToString();
+                            marker.LatLng.Latitude = (double)Reader["Latitude"];
+                            marker.LatLng.Longitude = (double)Reader["Longitude"];
+                            marker.MarkerId = (int)Reader["MarkerId"];
+                            obj.MarkerList.Add(marker);
+                        }
+                    }
+                    conn.Close();
+                }
+
+                using (SqlCommand Cmd = new SqlCommand("SELECT COUNT(*) AS NumberOfMarkers FROM MapMarkers WHERE MapId=@dMapId;", conn))
+                {
+                    Cmd.Parameters.Add("@dMapId", System.Data.SqlDbType.Int).Value = mapId;
+                    conn.Open();
+                    int.TryParse(Cmd.ExecuteScalar().ToString(), out obj.Count);
+                    conn.Close();
+                }
+            }
+
+
+            obj.CurrentPage = page;
+            obj.pageSize = pageSize;
+            obj.sortBy = sortBy;
+            obj.isAsc = isAsc;
+            obj.TotalPages = Math.Ceiling((double)obj.Count / (double)obj.pageSize);
+
+            if (obj.MarkerList.Count() <= pageSize)
+                obj.isLastRecord = 2;
+
+            if (obj.isLastRecord != 2)
+            {
+                if (obj.MarkerList.Count() <= pageSize)
+                    obj.isLastRecord = 1;
+                else
+                    obj.isLastRecord = 0;
+            }
+            return obj;
+
         }
 
 
