@@ -6,6 +6,7 @@ using System.Web;
 
 namespace Mapping
 {
+    // Details of the map
     public class MapDetail
     {
         [Display(Name = "Map Identifier")]
