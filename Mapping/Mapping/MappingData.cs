@@ -49,7 +49,7 @@ namespace Mapping
             MapDetail map = null;
             using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MappingDatabase"].ConnectionString))
             {
-                using (SqlCommand Cmd = new SqlCommand("select * from Maps where MapId=@dMapId and MapViewAllowed=1", conn))
+                using (SqlCommand Cmd = new SqlCommand("select * from Maps where MapId=@dMapId and MapPublicAllowed=1", conn))
                 {
                     Cmd.Parameters.Add("@dMapId", System.Data.SqlDbType.Int).Value = mapId;
                     conn.Open();
@@ -72,7 +72,7 @@ namespace Mapping
                     map.MapId = int.Parse(Reader["MapId"].ToString());
                     map.MapName = Reader["MapName"].ToString();
                     map.MapCode = Reader["MapCode"].ToString();
-                    map.MapViewAllowed = (bool)Reader["MapViewAllowed"];
+                    map.MapPublicAllowed = (bool)Reader["MapPublicAllowed"];
                 }
             }
             return map;
@@ -173,12 +173,12 @@ namespace Mapping
 
             using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MappingDatabase"].ConnectionString))
             {
-                using (SqlCommand Cmd = new SqlCommand("INSERT INTO Maps (MapName,MapCode,MapIdentifier,MapViewAllowed) VALUES (@dMapName,@dMapCode,@dMapIdentifier,@dMapViewAllowed);SELECT SCOPE_IDENTITY();", conn))
+                using (SqlCommand Cmd = new SqlCommand("INSERT INTO Maps (MapName,MapCode,MapIdentifier,MapPublicAllowed) VALUES (@dMapName,@dMapCode,@dMapIdentifier,@dMapPublicAllowed);SELECT SCOPE_IDENTITY();", conn))
                 {
                     Cmd.Parameters.Add("@dMapName", System.Data.SqlDbType.NVarChar).Value = map.MapName;
                     Cmd.Parameters.Add("@dMapCode", System.Data.SqlDbType.NVarChar).Value = map.MapCode;
                     Cmd.Parameters.Add("@dMapIdentifier", System.Data.SqlDbType.NVarChar).Value = map.MapIdentifier;
-                    Cmd.Parameters.Add("@dMapViewAllowed", System.Data.SqlDbType.Bit).Value = map.MapViewAllowed;
+                    Cmd.Parameters.Add("@dMapPublicAllowed", System.Data.SqlDbType.Bit).Value = map.MapPublicAllowed;
                     conn.Open();
                     int.TryParse(Cmd.ExecuteScalar().ToString(), out mapId);
                     conn.Close();
@@ -192,12 +192,12 @@ namespace Mapping
             if (map.MapCode == null) map.MapCode = string.Empty;
             using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MappingDatabase"].ConnectionString))
             {
-                using (SqlCommand Cmd = new SqlCommand("UPDATE Maps SET MapName=@dMapName,MapCode=@dMapCode,MapViewAllowed=@dMapViewAllowed WHERE MapIdentifier=@dMapIdentifier;", conn))
+                using (SqlCommand Cmd = new SqlCommand("UPDATE Maps SET MapName=@dMapName,MapCode=@dMapCode,MapPublicAllowed=@dMapPublicAllowed WHERE MapIdentifier=@dMapIdentifier;", conn))
                 {
                     Cmd.Parameters.Add("@dMapName", System.Data.SqlDbType.NVarChar).Value = map.MapName;
                     Cmd.Parameters.Add("@dMapCode", System.Data.SqlDbType.NVarChar).Value = (object)map.MapCode ?? DBNull.Value;
                     Cmd.Parameters.Add("@dMapIdentifier", System.Data.SqlDbType.NVarChar).Value = map.MapIdentifier;
-                    Cmd.Parameters.Add("@dMapViewAllowed", System.Data.SqlDbType.Bit).Value = map.MapViewAllowed;
+                    Cmd.Parameters.Add("@dMapPublicAllowed", System.Data.SqlDbType.Bit).Value = map.MapPublicAllowed;
                     conn.Open();
                     Cmd.ExecuteNonQuery();
                     conn.Close();

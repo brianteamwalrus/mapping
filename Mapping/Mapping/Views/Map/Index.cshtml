@@ -47,7 +47,7 @@
                     <div id="btnReset" onclick="javascript: Reset()" class="btn btn-warning">Reset</div> <div id="addMarkerStatus"></div>
                 </div>
 
-                @if (Model.mapDetail.MapViewAllowed == true)
+                @if (Model.mapDetail.MapPublicAllowed == true)
                 { 
                     @Html.Label("Read Only Map", new { @class = "col-sm-2 control-label"})
                     <div class="col-sm-4">

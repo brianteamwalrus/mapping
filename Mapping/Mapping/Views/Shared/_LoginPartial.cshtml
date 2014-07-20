@@ -7,28 +7,30 @@
     using (Html.BeginForm("LogOff", "Home", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
     <ul class="nav navbar-nav navbar-right">
-        <li>
-            @if (Model != null && Model.mapDetail != null) {
-            @Html.ActionLink("Edit: " + Model.mapDetail.MapId + " " + Model.mapDetail.MapName, "Edit", "Map", routeValues: null, htmlAttributes: new { title = "Edit Map" })
-            }
-        </li>
+        @if (Model != null && Model.mapDetail != null) {
+            <li>
+            
+                @Html.ActionLink("Edit: " + Model.mapDetail.MapId + " " + Model.mapDetail.MapName, "Edit", "Map", routeValues: null, htmlAttributes: new { title = "Edit Map" })
+    
+            </li>
 
-        <li>
-        @{
-            RouteData routeData = HttpContext.Current.Request.RequestContext.RouteData;
-            routeData.GetRequiredString("action");
+            <li>
+            @{
+                RouteData routeData = HttpContext.Current.Request.RequestContext.RouteData;
+                routeData.GetRequiredString("action");
 
-            if (routeData.GetRequiredString("action") == "Grid")
-            {
-                @Html.ActionLink("Map View","Index","Map",routeValues:null,htmlAttributes: null)        
-            } else
-            {
-                @Html.ActionLink("Grid View","Grid","Map",routeValues:null,htmlAttributes: null)        
+                if (routeData.GetRequiredString("action") == "Grid")
+                {
+                    @Html.ActionLink("Map View","Index","Map",routeValues:null,htmlAttributes: null)        
+                } else
+                {
+                    @Html.ActionLink("Grid View","Grid","Map",routeValues:null,htmlAttributes: null)        
+                }
             }
+            </li>
         }
-        </li>
-
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+        
     </ul>
     }
 }

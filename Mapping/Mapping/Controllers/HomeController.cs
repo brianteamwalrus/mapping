@@ -17,7 +17,7 @@ namespace Mapping.Controllers
         
         public ActionResult Index()
         {
-            FormsAuthentication.SignOut();
+            //FormsAuthentication.SignOut();
             return View();
         }
 

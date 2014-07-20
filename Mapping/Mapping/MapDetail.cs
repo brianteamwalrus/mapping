@@ -17,11 +17,11 @@ namespace Mapping
         [Display(Name = "Map Name")]
         public string MapName { get; set; }
 
-        [Display(Name = "Map Code")]
+        [Display(Name = "Password")]
         public string MapCode { get; set; }
 
-        [Display(Name = "Allow View Without Code")]
-        public bool MapViewAllowed { get; set; }
+        [Display(Name = "Allow Public")]
+        public bool MapPublicAllowed { get; set; }
 
     }
 }
