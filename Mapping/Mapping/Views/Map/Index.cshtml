@@ -164,7 +164,8 @@ else
                 // Google has tweaked their interface somewhat - this tells the api to use that new UI
                 gm.visualRefresh = true;
 
-                var AustraliaCentre = new gm.LatLng(-24.303423, 134.130571);
+                //var AustraliaCentre = new gm.LatLng(-24.303423, 134.130571);
+                var AustraliaCentre = new gm.LatLng(0,0);
 
                 // These are options that set initial zoom level, where the map is centered globally to start, and the type of map to show
                 var mapOptions = {
@@ -176,6 +177,13 @@ else
                 // This makes the div with id "map_canvas" a google map
                 map = new gm.Map(document.getElementById("map_canvas"), mapOptions);
                 oms = new OverlappingMarkerSpiderfier(map);
+
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        map.panTo(new gm.LatLng(position.coords.latitude,position.coords.longitude));
+                    });
+                }
 
                 // a list of JSON encoded data of places
                 var data = @Html.Raw(Model.mapLocationsJson)
