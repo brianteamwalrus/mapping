@@ -26,7 +26,7 @@ namespace Mapping.Controllers
         public ActionResult Index(MapModel model)
         {
             model.mapDetail = MappingData.GetMap(model.mapDetail.MapId, model.mapDetail.MapCode);
-            if (model != null)
+            if (model != null && model.mapDetail != null)
             {
                 FormsAuthentication.SetAuthCookie(model.mapDetail.MapIdentifier,false);
             }
