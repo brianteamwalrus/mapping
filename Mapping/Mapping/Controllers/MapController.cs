@@ -22,7 +22,7 @@ namespace Mapping.Controllers
             return View(model);
         }
 
-        public ActionResult MapView(string id)
+        public ActionResult Public(string id)
         {
             MapModel model = null;
 

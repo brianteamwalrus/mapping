@@ -35,7 +35,7 @@
                     <label>
                         @Html.CheckBoxFor(m => m.mapDetail.MapPublicAllowed, new { @checked= "checked" }) @Html.LabelFor(m => m.mapDetail.MapPublicAllowed)
                     </label>
-                    <span class="help-block">When enabled users will be able to view the map through special URL <em>http://@(Request.Url.Authority)/Map/MapView/{map code}</em></span>
+                    <span class="help-block">When enabled users will be able to view the map through special URL <em>http://@(Request.Url.Authority)/Map/Public/{map code}</em></span>
                 </div>
             </div>
         </div>
