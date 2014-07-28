@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -48,51 +49,10 @@ namespace Mapping.Controllers
         [HttpPost]
         public string AddMarker(string PlaceName, string Address, string Latitude, string Longitude)
         {
-            AddMarkerClass result = new AddMarkerClass();
-            result.Status = false;
-
-            bool validated = true;
-            if (string.IsNullOrEmpty(PlaceName)) {
-                validated = false;
-                result.Text = "Place Name is a required field. ";
-            }
-            if (string.IsNullOrEmpty(Address))
+            MapLocation result = new MapLocation(PlaceName, Address, Latitude, Longitude);
+            if (result.Status == true)
             {
-                validated = false;
-                result.Text += "Address is a required field. ";
-            }
-
-            if (validated == true)
-            {
-                result.Location.PlaceName = PlaceName;
-                result.Location.Address = Address;
-
-                double latitude = 0;
-                double.TryParse(Latitude, out latitude);
-                double longitude = 0;
-                double.TryParse(Longitude, out longitude);
-
-                if (latitude == 0 && longitude == 0)
-                {
-                    result.Location.SetLocation();
-
-                    if (result.Location.LatLng == null)
-                    {
-                        validated = false;
-                        result.Text += "Unable to determine address from location. ";
-                    }
-
-                } else
-                {
-                    result.Location.LatLng.Latitude = latitude;
-                    result.Location.LatLng.Longitude = longitude;
-                }
-            }
-
-            if (validated == true)
-            {
-                result.Location.MarkerId = MappingData.AddMarker(User.Identity.Name, result.Location);
-                result.Status = true;
+                result.MarkerId = MappingData.AddMarker(User.Identity.Name, result);
             }
 
             System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -187,6 +147,113 @@ namespace Mapping.Controllers
             MapModel model = new MapModel();
             model.mapDetail = MappingData.GetMap(User.Identity.Name);
             model.mapGrid = MappingData.GetMarkersForGrid(model.mapDetail.MapId, page, sortBy, isAsc);
+            return View(model);
+        }
+
+        [Authorize]
+        public ActionResult Import()
+        {
+            MapModel model = new MapModel();
+            model.mapDetail = MappingData.GetMap(User.Identity.Name);
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Import(HttpPostedFileBase file, bool? onlyErrors)
+        {
+            MapModel model = new MapModel();
+            model.mapDetail = MappingData.GetMap(User.Identity.Name);
+
+            try
+            {
+                if (file.ContentLength > 0)
+                {
+                    //var fileName = Path.GetFileName(file.FileName);
+                    //var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), fileName);
+                    //file.SaveAs(path);
+
+                    var placeNameColumn = -1;
+                    var addressColumn = -1;
+                    var latitudeColumn = -1;
+                    var longitudeColumn = -1;
+                    var fileRecordCount = 0;
+
+                    var reader = new StreamReader(file.InputStream);
+                    while (!reader.EndOfStream)
+                    {
+                        var line = reader.ReadLine();
+                        var values = line.Split(new string[] { @""",""" }, StringSplitOptions.None);
+
+                        if (fileRecordCount == 0)
+                        {
+                            for (var i = 0; i < values.Length; i++)
+                            {
+                                if (values[i].Contains("PlaceName"))
+                                {
+                                    placeNameColumn = i;
+                                }
+                                if (values[i].Contains("Address"))
+                                {
+                                    addressColumn = i;
+                                }
+                                if (values[i].Contains("Latitude"))
+                                {
+                                    latitudeColumn = i;
+                                }
+                                if (values[i].Contains("Longitude"))
+                                {
+                                    longitudeColumn = i;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            string placeNameData = string.Empty;
+                            if (placeNameColumn >= 0) placeNameData = values[placeNameColumn].Trim(new Char[] { '"' });
+
+                            string addressData = string.Empty;
+                            if (addressColumn >= 0) addressData = values[addressColumn].Trim(new Char[] { '"' });
+
+                            string latitudeData = string.Empty;
+                            if (latitudeColumn >= 0) latitudeData = values[latitudeColumn].Trim(new Char[] { '"' });
+
+                            string longitudeData = string.Empty;
+                            if (longitudeColumn >= 0) longitudeData = values[longitudeColumn].Trim(new Char[] { '"' });
+
+                            MapLocation result = new MapLocation(placeNameData,
+                                addressData,
+                                latitudeData,
+                                longitudeData);
+                            if (result.Status == true)
+                            {
+                                result.MarkerId = MappingData.AddMarker(User.Identity.Name, result);
+                                if (result.MarkerId == 0)
+                                {
+                                    result.Status = false;
+                                    result.StatusText = "Error saving marker";
+                                }
+                            }
+
+                            if (result.Status == true)
+                            {
+                                result.StatusText = "<p class='text-success'>Success</p>";
+                                model.CountSuccess++;
+                                if (onlyErrors == null || onlyErrors == false) model.mapLocations.Add(result);
+                            } else
+                            {
+                                model.CountFailure++;
+                                model.mapLocations.Add(result);
+                            }
+                        }
+                        fileRecordCount++;
+                    }
+                    model.CountTotal = model.CountSuccess + model.CountFailure;
+                }
+            }
+            catch (Exception ex)
+            { }
             return View(model);
         }
 

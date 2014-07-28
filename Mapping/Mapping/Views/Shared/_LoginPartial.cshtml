@@ -9,25 +9,27 @@
     <ul class="nav navbar-nav navbar-right">
         @if (Model != null && Model.mapDetail != null) {
             <li>
-            
                 @Html.ActionLink("Edit: " + Model.mapDetail.MapId + " " + Model.mapDetail.MapName, "Edit", "Map", routeValues: null, htmlAttributes: new { title = "Edit Map" })
-    
             </li>
 
+            @*{
+            RouteData routeData = HttpContext.Current.Request.RequestContext.RouteData;
+            routeData.GetRequiredString("action");
+            if (routeData.GetRequiredString("action") == "Grid") { }
+            }*@
+            
             <li>
-            @{
-                RouteData routeData = HttpContext.Current.Request.RequestContext.RouteData;
-                routeData.GetRequiredString("action");
-
-                if (routeData.GetRequiredString("action") == "Grid")
-                {
-                    @Html.ActionLink("Map View","Index","Map",routeValues:null,htmlAttributes: null)        
-                } else
-                {
-                    @Html.ActionLink("Grid View","Grid","Map",routeValues:null,htmlAttributes: null)        
-                }
-            }
+                @Html.ActionLink("Map View", "Index", "Map", routeValues: null, htmlAttributes: new { title = "View Map" })
             </li>
+            
+            <li>
+                @Html.ActionLink("Grid View", "Grid", "Map", routeValues: null, htmlAttributes: new { title = "Grid View" })        
+            </li>
+            
+            <li>
+                @Html.ActionLink("Import", "Import", "Map", routeValues: null, htmlAttributes: new { title = "Import Locations" })
+            </li>
+
         }
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
         

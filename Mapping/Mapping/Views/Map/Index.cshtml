@@ -256,29 +256,26 @@ else
                 var address = document.getElementById("mapLocation_Address").value;
                 var latitude = document.getElementById("mapLocation_LatLng_Latitude").value;
                 var longitude = document.getElementById("mapLocation_LatLng_Longitude").value;
+
                 $.ajax({
                     type: "POST",
                     url: '/Map/AddMarker',
+                    contentType: "application/json; charset=utf-8",
                     dataType: "json",  //html
-                    data: {
-                        'PlaceName': placeName,
-                        'Address': address,
-                        'Latitude': latitude,
-                        'Longitude': longitude
-                    },
+                    data: JSON.stringify({ PlaceName: placeName, Address: address, Latitude: latitude, Longitude: longitude }),
                     success: function (result) {
                         if (jQuery.isEmptyObject(result)) {
                             SaveMarkerError(); 
                         } else {
                             if (result.Status == true) {
-                                SaveMarkerSuccess(result.Location);
+                                SaveMarkerSuccess(result);
                             } else {
-                                SaveMarkerError(result.Text);
+                                SaveMarkerError(result.StatusText);
                             }
                         }
                     },
                     error: function (request, status, error) {
-                        SaveMarkerError();
+                        SaveMarkerError("Error saving location");
                     }
                 });
             }

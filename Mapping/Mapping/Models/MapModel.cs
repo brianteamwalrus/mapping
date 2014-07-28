@@ -12,6 +12,9 @@ namespace Mapping.Models
         public List<MapLocation> mapLocations { get; set; }
         public bool updateStatus { get; set; }
         public MapGrid mapGrid { get; set; }
+        public int CountTotal { get; set; }
+        public int CountSuccess { get; set; }
+        public int CountFailure { get; set; }
 
         public string mapLocationsJson
         {

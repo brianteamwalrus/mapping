@@ -95,8 +95,8 @@ namespace Mapping
                         while (Reader.Read())
                         {
                             marker = new MapLocation();
-                            marker.PlaceName = Reader["PlaceName"].ToString();
-                            marker.Address = Reader["Address"].ToString();
+                            marker.PlaceName = HttpUtility.HtmlEncode(Reader["PlaceName"].ToString());
+                            marker.Address = HttpUtility.HtmlEncode(Reader["Address"].ToString());
                             marker.LatLng.Latitude = (double)Reader["Latitude"];
                             marker.LatLng.Longitude = (double)Reader["Longitude"];
                             marker.MarkerId = (int)Reader["MarkerId"];
@@ -257,8 +257,8 @@ namespace Mapping
                         while (Reader.Read())
                         {
                             marker = new MapLocation();
-                            marker.PlaceName = Reader["PlaceName"].ToString();
-                            marker.Address = Reader["Address"].ToString();
+                            marker.PlaceName = HttpUtility.HtmlEncode(Reader["PlaceName"].ToString());
+                            marker.Address = HttpUtility.HtmlEncode(Reader["Address"].ToString());
                             marker.LatLng.Latitude = (double)Reader["Latitude"];
                             marker.LatLng.Longitude = (double)Reader["Longitude"];
                             marker.MarkerId = (int)Reader["MarkerId"];

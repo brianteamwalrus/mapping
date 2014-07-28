@@ -49,14 +49,21 @@ namespace Mapping.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
-            return View();
+            ViewBag.Message = "TWMapping is currently in BETA release.";
+            MapModel model = new MapModel();
+            model.mapDetail = MappingData.GetMap(User.Identity.Name);
+
+            return View(model);
         }
 
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
-            return View();
+
+            MapModel model = new MapModel();
+            model.mapDetail = MappingData.GetMap(User.Identity.Name);
+
+            return View(model);
         }
 
     }

@@ -1,0 +1,100 @@
+﻿@model Mapping.Models.MapModel
+
+@{
+    ViewBag.Title = "Import";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Import Marker Locations</h2>
+
+@using (Html.BeginForm("Import", "Map", FormMethod.Post, new { role = "form", enctype="multipart/form-data",autocomplete = "off" }))
+        {
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            <input type="file" name="file">
+        </div>
+        <div class="checkbox">
+            <label>
+                    @Html.CheckBox("onlyErrors", true) Only show errors
+            </label>
+       </div>
+        <button type="submit" class="btn btn-default">Upload</button><div class="btn glyphicon glyphicon-question-sign" data-toggle="modal" data-target="#helpModal"></div>
+}
+
+@{ if (HttpContext.Current.Request.HttpMethod == "POST")
+   {
+       <p>Records processed: @Html.DisplayFor(m=>m.CountTotal)</p>
+       <p>Records in error : @Html.DisplayFor(m=>m.CountFailure)</p>
+       <p>Records imported : @Html.DisplayFor(m=>m.CountSuccess)</p>
+   }
+}
+
+<br />
+<table class="table table-striped">
+    <tr>
+        <th></th>
+        <th>@Html.DisplayNameFor(m=>m.mapLocation.PlaceName)</th>
+        <th>@Html.DisplayNameFor(m=>m.mapLocation.Address)</th>
+        <th>@Html.DisplayNameFor(m=>m.mapLocation.LatLng.Latitude)</th>
+        <th>@Html.DisplayNameFor(m=>m.mapLocation.LatLng.Longitude)</th>
+        <th>@Html.DisplayNameFor(m=>m.mapLocation.StatusText)</th>
+    </tr>
+
+    @{  var i = 0;
+        foreach (var marker in Model.mapLocations)
+        {
+            i++;
+        if (marker.Status == true) { 
+            @:<tr> 
+            }
+        else
+        {
+            @:<tr class="danger">
+        }
+
+            <td>@(i.ToString())</td>
+            <td>@(marker.PlaceName)</td>
+            <td>@(marker.Address)</td>
+            <td>@(marker.LatLng.Latitude)</td>
+            <td>@(marker.LatLng.Longitude)</td>
+            <td>@Html.Raw(marker.StatusText)</td>
+        @:</tr>
+        }
+    }
+</table>
+
+
+<div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="helpModalLabel">Import File Help</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-danger"><strong>"PlaceName" and "Address" are required fields.</strong></p>
+
+                    <h3>Example 1</h3>
+                    <code>"PlaceName","Address","Latitude","Longitude"<br />
+                    "Location 1","Claravale Northern Territory Australia 0822","-14.3495478371854","131.484375"<br />
+                    "Location 2","Tanami Northern Territory Australia 0872","-20.5505088941956","131.484375"<br />
+                    "Location 3","Peak Hill Western Australia Australia 6642","-24.6869524119991","117.861328125"<br /></code>
+                    <h3>Example 2</h3>
+                    <code>"PlaceName","Address","Latitude","Longitude"<br />
+                    "Location 4","Claravale,Northern Territory Australia,0822","",""<br />
+                    "Location 5","Tanami, Northern Territory Australia,0872","-20.5505088941956","131.484375"<br />
+                    "Location 6","Peak Hill, Western Australia Australia,6642","",""<br /></code>
+                    <h3>Example 3</h3>
+                    <code>"PlaceName","Address"<br />
+                    "Location 1","Claravale Northern Territory Australia 0822"<br />
+                    "Location 2","Tanami Northern Territory Australia 0872"<br />
+                    "Location 3","Peak Hill Western Australia Australia 6642"<br />
+                    </code>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+    </div>
+</div>  
